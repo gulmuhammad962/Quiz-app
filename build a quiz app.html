@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #0d8b94;
+        }
+
+        #quiz-container {
+            text-align: center;
+            padding: 20px;
+            background-color: #ca7676;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #question {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .option {
+            margin: 5px;
+            padding: 10px;
+            width: 200px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .option:hover {
+            background-color: #f5f5f5;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <h2>Quiz App</h2>
+        <div id="question"></div>
+        <div class="options" id="options-container"></div>
+        <div id="feedback"></div>
+        <button onclick="nextQuestion()">Next Question</button>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: 'What is the capital of France?',
+                options: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+                correctAnswer: 'Paris'
+            },
+            {
+                question: 'Which planet is known as the Red Planet?',
+                options: ['Venus', 'Mars', 'Jupiter', 'Saturn'],
+                correctAnswer: 'Mars'
+            },
+            {
+                question: 'What is the largest mammal in the world?',
+                options: ['Elephant', 'Blue Whale', 'Giraffe', 'Hippopotamus'],
+                correctAnswer: 'Blue Whale'
+            }
+            // Add more questions as needed
+        ];
+
+        let currentQuestionIndex = 0;
+        let userScore = 0;
+
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackElement = document.getElementById('feedback');
+
+        function displayQuestion() {
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+
+            optionsContainer.innerHTML = '';
+            currentQuestion.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => checkAnswer(option));
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+
+        function checkAnswer(selectedAnswer) {
+            const currentQuestion = quizData[currentQuestionIndex];
+            if (selectedAnswer === currentQuestion.correctAnswer) {
+                userScore++;
+                feedbackElement.textContent = 'Correct!';
+            } else {
+                feedbackElement.textContent = 'Wrong!';
+            }
+            optionsContainer.classList.add('disabled');
+            showScore();
+        }
+
+        function showScore() {
+            feedbackElement.textContent += ` Your Score: ${userScore}/${quizData.length}`;
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            feedbackElement.textContent = '';
+
+            if (currentQuestionIndex < quizData.length) {
+                displayQuestion();
+                optionsContainer.classList.remove('disabled');
+            } else {
+                optionsContainer.innerHTML = '';
+                questionElement.textContent = 'Quiz completed!';
+                showScore();
+            }
+        }
+
+        // Initial display
+        displayQuestion();
+    </script>
+</body>
+</html>
